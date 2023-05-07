@@ -92,11 +92,15 @@ jobs:
         with:
            path: artifacts
 
-      - name: Display structure of downloaded files
-        run: ls -R
+      - id: get_names
+        name: Retrieve naming
+        run: |
+          VAR=$(ls -1 artifacts/*)       
+          echo "artnames=$VAR" >> $GITHUB_OUTPUT
+          echo "artnames=$VAR" 
           
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ./artifacts/*
+          files: ${{ steps.get_names.outputs.artnames }}
 
