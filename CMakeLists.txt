@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 include(local_conf.cmake OPTIONAL)
-project(Qtbech32 VERSION 0.1 DESCRIPTION "Qt bech32 library " LANGUAGES CXX)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+include(cmake/VersionFromGit.cmake)
+
+version_from_git(
+  LOG       ON
+  TIMESTAMP "%Y%m%d%H%M%S"
+)
+project(Qtbech32 VERSION ${VERSION} DESCRIPTION "Qt bech32 library " LANGUAGES CXX)
 
 
 set(default_build_type "Release")
@@ -20,7 +27,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_library(qbech32 include/encoding/qbech32.hpp qbech32.cpp src/bech32.cpp
         src/bech32.h src/segwit_addr.cpp src/segwit_addr.h src/iota_addr.h src/iota_addr.cpp)
 
-find_package(Qt6 REQUIRED COMPONENTS Core)
+include(cmake/FindQt.cmake)
+
 target_link_libraries(qbech32 PUBLIC  Qt6::Core )
 
 target_include_directories(qbech32 PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -45,8 +53,8 @@ configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
 	)
 write_basic_package_version_file(
 	"${CMAKE_CURRENT_BINARY_DIR}/qbech32ConfigVersion.cmake"
-	VERSION "0.1.1.0"
-	COMPATIBILITY AnyNewerVersion
+	VERSION ${VERSION}
+	COMPATIBILITY SameMajorVersion
 	)
 install(FILES
 	${CMAKE_CURRENT_BINARY_DIR}/qbech32Config.cmake
@@ -58,6 +66,8 @@ export(EXPORT qbech32Targets
 	)
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
+    include(CPack)
+    set(CPACK_PACKAGE_FILE_NAME ${PROJECT_NAME}-v${SEMVER})
 endif()
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
     add_subdirectory(tests)
