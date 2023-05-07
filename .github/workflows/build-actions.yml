@@ -68,11 +68,13 @@ jobs:
 
       - name: Binary Package
         working-directory: ${{ runner.temp }}/build
-        run:  cpack -B package --config CPackConfig.cmake
+        run: |
+          cpack -B package --config CPackConfig.cmake
+          cmake -E remove_directory package/_CPack_Packages
       
       - name: Tar artifact
         working-directory: ${{ runner.temp }}/build
-        run: cmake -E tar cvzf ${{ matrix.os }}_sharedlib_${{ matrix.sharedLib }}.tar.gz --exclude='_CPack_Packages' package/ 
+        run: cmake -E tar cvzf ${{ matrix.os }}_sharedlib_${{ matrix.sharedLib }}.tar.gz  package
 
       - uses: actions/upload-artifact@v3
         with:
