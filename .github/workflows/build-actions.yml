@@ -72,14 +72,11 @@ jobs:
           cpack -B package --config CPackConfig.cmake
           cmake -E remove_directory package/_CPack_Packages
       
-      - name: Tar artifact
-        working-directory: ${{ runner.temp }}/build
-        run: cmake -E tar cvzf ${{ matrix.os }}_sharedlib_${{ matrix.sharedLib }}.tar.gz  package
 
       - uses: actions/upload-artifact@v3
         with:
           name: Release for ${{ matrix.os }}_sharedlib_${{ matrix.sharedLib }}
-          path: ${{ runner.temp }}/build/${{ matrix.os }}_sharedlib_${{ matrix.sharedLib }}.tar.gz 
+          path: ${{ runner.temp }}/build/package/* 
 
   release:
     needs: build_test_package
