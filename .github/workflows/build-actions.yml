@@ -94,9 +94,15 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
           
-      - name: Release
+      - name: Release Shared 
         uses: softprops/action-gh-release@v1
         with:
-          files: ./artifacts/*/*
-          fail_on_unmatched_files: false  
+          name: ${{ github.ref }} Shared
+          files: ./artifacts/*sharedlib_on*/*
+      
+      - name: Release Static
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ github.ref }} Static
+          files: ./artifacts/*sharedlib_off*/*
 
