@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} pushed
 on: 
   push:
     branches:
-      - 'main'
+      - 'develop'
     tags:
       - 'v*'
 jobs:
@@ -91,9 +91,12 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
            path: artifacts
+      - name: Display structure of downloaded files
+        run: ls -R
           
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: ./artifacts/*/*
+          fail_on_unmatched_files: false  
 
