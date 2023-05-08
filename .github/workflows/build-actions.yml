@@ -75,7 +75,7 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: Release for ${{ matrix.os }}_sharedlib_${{ matrix.sharedLib }}
+          name: ${{ matrix.os }}_sharedlib_${{ matrix.sharedLib }}
           path: ${{ runner.temp }}/build/package/* 
 
   release:
@@ -91,16 +91,9 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
            path: artifacts
-
-      - id: get_names
-        name: Retrieve naming
-        run: |
-          VAR=$(ls -1 artifacts/*)       
-          echo "artnames=$VAR" >> $GITHUB_OUTPUT
-          echo "artnames=$VAR" 
           
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ steps.get_names.outputs.artnames }}
+          files: ./artifacts/*/*
 
