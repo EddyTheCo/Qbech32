@@ -4,7 +4,7 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 include(cmake/VersionFromGit.cmake)
 
 version_from_git(
-  LOG       ON
+	LOG       OFF
   TIMESTAMP "%Y%m%d%H%M%S"
 )
 project(Qtbech32 VERSION ${VERSION} DESCRIPTION "Qt bech32 library " LANGUAGES CXX)
