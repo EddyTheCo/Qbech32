@@ -24,10 +24,13 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 
+
+find_package(Qt6 REQUIRED COMPONENTS Core)
+qt_standard_project_setup()
+
 add_library(qbech32 include/encoding/qbech32.hpp qbech32.cpp src/bech32.cpp
         src/bech32.h src/segwit_addr.cpp src/segwit_addr.h src/iota_addr.h src/iota_addr.cpp)
 
-include(cmake/FindQt.cmake)
 
 target_link_libraries(qbech32 PUBLIC  Qt6::Core )
 
