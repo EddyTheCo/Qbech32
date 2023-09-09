@@ -38,7 +38,7 @@ if (Qt6_FOUND)
 endif(Qt6_FOUND)
 
 add_library(qbech32 qbech32.cpp src/bech32.cpp
-	src/bech32.h src/segwit_addr.cpp src/segwit_addr.h src/iota_addr.h src/iota_addr.cpp)
+	 src/segwit_addr.cpp src/iota_addr.cpp)
 
 
 if (Qt6_FOUND)
@@ -47,6 +47,8 @@ endif(Qt6_FOUND)
 
 target_include_directories(qbech32 PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
+target_include_directories(qbech32 PRIVATE  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
 
 install(TARGETS qbech32 EXPORT qbech32Targets DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
