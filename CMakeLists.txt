@@ -10,8 +10,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(ccommon)
 version_from_git(
 	LOG       OFF
-  TIMESTAMP "%Y%m%d%H%M%S"
-)
+	TIMESTAMP "%Y%m%d%H%M%S"
+	)
 project(Qtbech32 VERSION ${VERSION} DESCRIPTION "Qt bech32 library " LANGUAGES CXX)
 
 
@@ -30,38 +30,38 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+include(GNUInstallDirs)
 
 find_package(Qt6 COMPONENTS Core)
 if (Qt6_FOUND)
-qt_standard_project_setup()
+	qt_standard_project_setup()
 endif(Qt6_FOUND)
 
-add_library(qbech32 include/encoding/qbech32.hpp qbech32.cpp src/bech32.cpp
-        src/bech32.h src/segwit_addr.cpp src/segwit_addr.h src/iota_addr.h src/iota_addr.cpp)
+add_library(qbech32 qbech32.cpp src/bech32.cpp
+	 src/segwit_addr.cpp src/iota_addr.cpp)
 
 
 if (Qt6_FOUND)
-target_link_libraries(qbech32 PUBLIC  Qt6::Core )
+	target_link_libraries(qbech32 PUBLIC  Qt6::Core )
 endif(Qt6_FOUND)
-target_include_directories(qbech32 PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	"$<INSTALL_INTERFACE:include>")
-target_include_directories(qbech32 PRIVATE  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-	"$<INSTALL_INTERFACE:src>")
 
-install(TARGETS qbech32 EXPORT qbech32Targets DESTINATION lib)
-install(DIRECTORY include/ DESTINATION include/)
+target_include_directories(qbech32 PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
+target_include_directories(qbech32 PRIVATE  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
+
+install(TARGETS qbech32 EXPORT qbech32Targets DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 install(EXPORT qbech32Targets
 	FILE qbech32Targets.cmake
-	DESTINATION lib/cmake/qbech32
+	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/qbech32
 	)
 include(CMakePackageConfigHelpers)
 # generate the config file that is includes the exports
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
 	"${CMAKE_CURRENT_BINARY_DIR}/qbech32Config.cmake"
-	INSTALL_DESTINATION "lib/cmake/qbech32"
-	NO_SET_AND_CHECK_MACRO
-	NO_CHECK_REQUIRED_COMPONENTS_MACRO
+	INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/qbech32"
 	)
 write_basic_package_version_file(
 	"${CMAKE_CURRENT_BINARY_DIR}/qbech32ConfigVersion.cmake"
@@ -71,21 +71,22 @@ write_basic_package_version_file(
 install(FILES
 	${CMAKE_CURRENT_BINARY_DIR}/qbech32Config.cmake
 	${CMAKE_CURRENT_BINARY_DIR}/qbech32ConfigVersion.cmake
-	DESTINATION lib/cmake/qbech32
+	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/qbech32
 	)
 export(EXPORT qbech32Targets
 	FILE "${CMAKE_CURRENT_BINARY_DIR}/qbech32Targets.cmake"
 	)
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-    include(CTest)
-    set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-v${SEMVER}-${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_VERSION}-${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_CXX_COMPILER_ID}")
-    if(NOT BUILD_SHARED_LIBS)	    
-    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-static")
-    endif(NOT BUILD_SHARED_LIBS)		    
-    include(CPack)
+	set(CPACK_PACKAGE_CONTACT "estervtech")
+	include(CTest)
+	set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-v${SEMVER}-${CMAKE_SYSTEM_NAME}_${CMAKE_SYSTEM_VERSION}-${CMAKE_SYSTEM_PROCESSOR}-${CMAKE_CXX_COMPILER_ID}")
+	if(NOT BUILD_SHARED_LIBS)
+		set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-static")
+	endif(NOT BUILD_SHARED_LIBS)
+	include(CPack)
 endif()
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-    add_subdirectory(tests)
+	add_subdirectory(tests)
 endif()
 if(BUILD_DOCS)
 	get_target_property(build_docs cmake_build_docs SOURCES)
