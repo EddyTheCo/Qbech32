@@ -31,7 +31,8 @@
 namespace bech32
 {
 
-enum class Encoding {
+enum class Encoding
+{
     INVALID,
 
     BECH32,  //! Bech32 encoding as defined in BIP173
@@ -40,7 +41,7 @@ enum class Encoding {
 
 /** Encode a Bech32 or Bech32m string. If hrp contains uppercase characters, this will cause an
  *  assertion error. Encoding must be one of BECH32 or BECH32M. */
-std::string encode(const std::string& hrp, const std::vector<uint8_t>& values, Encoding encoding);
+std::string encode(const std::string &hrp, const std::vector<uint8_t> &values, Encoding encoding);
 
 /** A type for the result of decoding. */
 struct DecodeResult
@@ -49,14 +50,18 @@ struct DecodeResult
     std::string hrp;           //!< The human readable part
     std::vector<uint8_t> data; //!< The payload (excluding checksum)
 
-    DecodeResult() : encoding(Encoding::INVALID) {}
-    DecodeResult(Encoding enc, std::string&& h, std::vector<uint8_t>&& d) : encoding(enc), hrp(std::move(h)), data(std::move(d)) {}
+    DecodeResult() : encoding(Encoding::INVALID)
+    {
+    }
+    DecodeResult(Encoding enc, std::string &&h, std::vector<uint8_t> &&d)
+        : encoding(enc), hrp(std::move(h)), data(std::move(d))
+    {
+    }
 };
 
 /** Decode a Bech32 or Bech32m string. */
-DecodeResult decode(const std::string& str);
+DecodeResult decode(const std::string &str);
 
-}  // namespace bech32
+} // namespace bech32
 
-#endif  // BECH32_H_
-
+#endif // BECH32_H_
